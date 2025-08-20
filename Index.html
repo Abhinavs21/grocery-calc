@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Price Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f8f8f8;
+      margin: 0;
+    }
+    .calculator {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      margin-top: 15px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>Grocery Calculator</h2>
+    <label>Price per Kg (₹):</label>
+    <input type="number" id="pricePerKg" placeholder="Enter price per kg">
+
+    <label>Choose Calculation:</label>
+    <select id="calcType">
+      <option value="price">Find Price for Quantity</option>
+      <option value="quantity">Find Quantity for Amount</option>
+    </select>
+
+    <div id="quantityInput">
+      <label>Enter Quantity (grams):</label>
+      <input type="number" id="quantity" placeholder="e.g. 250">
+    </div>
+
+    <div id="amountInput" style="display:none;">
+      <label>Enter Amount (₹):</label>
+      <input type="number" id="amount" placeholder="e.g. 10">
+    </div>
+
+    <button onclick="calculate()">Calculate</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const calcType = document.getElementById("calcType");
+    const quantityInput = document.getElementById("quantityInput");
+    const amountInput = document.getElementById("amountInput");
+
+    calcType.addEventListener("change", () => {
+      if (calcType.value === "price") {
+        quantityInput.style.display = "block";
+        amountInput.style.display = "none";
+      } else {
+        quantityInput.style.display = "none";
+        amountInput.style.display = "block";
+      }
+    });
+
+    function calculate() {
+      const pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
+      const quantity = parseFloat(document.getElementById("quantity").value);
+      const amount = parseFloat(document.getElementById("amount").value);
+      let result = "";
+
+      if (isNaN(pricePerKg) || pricePerKg <= 0) {
+        result = "Please enter a valid price per kg.";
+      } else if (calcType.value === "price") {
+        if (isNaN(quantity) || quantity <= 0) {
+          result = "Please enter a valid quantity in grams.";
+        } else {
+          let price = (pricePerKg / 1000) * quantity;
+          result = `Price for ${quantity}g = ₹${price.toFixed(2)}`;
+        }
+      } else {
+        if (isNaN(amount) || amount <= 0) {
+          result = "Please enter a valid amount.";
+        } else {
+          let qty = (amount / pricePerKg) * 1000;
+          result = `Quantity for ₹${amount} = ${qty.toFixed(2)} g`;
+        }
+      }
+
+      document.getElementById("result").innerText = result;
+    }
+  </script>
+</body>
+</html>
